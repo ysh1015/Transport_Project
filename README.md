@@ -14,7 +14,7 @@
 
 경기도 오픈 API를 사용해서 구현할 것
 
-[문화유산 경기도 오픈 API]<https://www.data.go.kr/data/15094713/fileData.do>
+[문화유산 경기도 오픈 API](https://www.data.go.kr/data/15094713/fileData.do)
 
 ##### 3. 날씨 API
 
