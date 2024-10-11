@@ -21,6 +21,9 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version = "2.9.0" }
 retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version = "2.9.0" }
 
+# 네이버 지도 API
+naver-map-sdk = { group = "com.naver.maps", name = "map-sdk", version = "3.19.1" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 
