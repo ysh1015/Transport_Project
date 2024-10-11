@@ -4,15 +4,11 @@
 
 ![완성된 앱 구조](https://github.com/ysh1015/Transport_Project/blob/FrontAnd_MAP/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_10-10-2024_16321_cdn.discordapp.com.jpeg)
 
----
+### 필요한 정보
 
-## 필요한 정보
-
-### 1. 지도 API
+##### 1. 지도 API
 
 네이버 지도 API나 티맵 API를 우선적으로 넣어보고, 안되면 구글 지도API을 사용해서 구현할 것
-
-[네이버 지도 API 신청](https://www.ncloud.com/product/applicationService/maps)
 
 ##### 2. 문화유산 API
 
