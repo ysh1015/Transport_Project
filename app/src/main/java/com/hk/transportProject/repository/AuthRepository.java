@@ -8,6 +8,9 @@ import com.hk.transportProject.model.User;
 import com.hk.transportProject.model.LoginResponse;
 import com.hk.transportProject.network.RetrofitClient;
 import com.hk.transportProject.network.AuthService;
+
+import java.io.IOException;
+
 import javax.inject.Inject;
 
 import retrofit2.Call;
@@ -16,7 +19,7 @@ import retrofit2.Response;
 
 public class AuthRepository {
 
-    private AuthService authService;
+    private final AuthService authService;
     // 생성자 DI
     @Inject
     public AuthRepository(AuthService authService) {
@@ -36,13 +39,17 @@ public class AuthRepository {
                 if (response.isSuccessful() && response.body() != null) {
                     loginResponse.setValue(response.body());
                 } else {
-                    loginResponse.setValue(null);
+                    loginResponse.setValue(new LoginResponse(false,"로그인 실패" + response.message()));
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                loginResponse.setValue(null);
+                if(t instanceof IOException) {
+                    loginResponse.setValue(new LoginResponse(false, "네트워크 문제가 발생하였습니다."));
+                } else{
+                    loginResponse.setValue(new LoginResponse(false, "서버 오류: "+ t.getMessage()));
+                }
             }
         });
 

@@ -11,6 +11,9 @@ import com.hk.transportProject.viewmodel.AuthViewModel;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
