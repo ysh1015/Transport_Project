@@ -7,13 +7,17 @@ import com.hk.transportProject.model.User;
 import com.hk.transportProject.model.LoginResponse;
 import com.hk.transportProject.repository.AuthRepository;
 
+import javax.inject.Inject;
+
 public class AuthViewModel extends ViewModel {
 
     private AuthRepository authRepository;
 
-    public AuthViewModel() {
-        authRepository = new AuthRepository();
+    @Inject
+    public AuthViewModel(AuthRepository authRepository) {
+        this.authRepository = authRepository;
     }
+
 
     public LiveData<LoginResponse> login(String userId, String password) {
         User user = new User(userId, password);

@@ -8,6 +8,7 @@ import com.hk.transportProject.model.User;
 import com.hk.transportProject.model.LoginResponse;
 import com.hk.transportProject.network.RetrofitClient;
 import com.hk.transportProject.network.AuthService;
+import javax.inject.Inject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -16,9 +17,11 @@ import retrofit2.Response;
 public class AuthRepository {
 
     private AuthService authService;
-    // 생성자 주입
-    public AuthRepository() {
-        authService = RetrofitClient.getRetrofitInstance().create(AuthService.class);
+    // 생성자 DI
+    @Inject
+    public AuthRepository(AuthService authService) {
+        // authService = RetrofitClient.getRetrofitInstance().create(AuthService.class);
+        this.authService = authService;
     }
 
     // 로그인 요청 User 객체 -> 서버
