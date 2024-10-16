@@ -1,5 +1,6 @@
 package com.hk.transportProject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -28,6 +30,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btn_login = (Button) findViewById(R.id.btn_login);
+        btn_login.setOnClickListener(view -> {
+            Intent i = new Intent(MainActivity.this, TestActivity.class);
+            startActivity(i);
+        });
 
     }
 }
