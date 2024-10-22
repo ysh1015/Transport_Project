@@ -40,6 +40,7 @@ dependencies {
     implementation(libs.retrofit)        // Retrofit 의존성 추가
     implementation(libs.retrofit.gson)   // Gson 컨버터 의존성 추가
     implementation(libs.naver.map.sdk)      // 네이버 지도 SDK 의존성 추가
+    implementation(libs.simplexml)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
