@@ -10,6 +10,7 @@ import dagger.Module;
 import dagger.hilt.InstallIn;
 import dagger.Provides;
 import dagger.hilt.components.SingletonComponent;
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -27,6 +28,11 @@ public class AppModule {
     @Provides
     public AuthService provideApiService(Retrofit retrofit) {
         return retrofit.create(AuthService.class);
+    }
+
+    @Singleton
+    public static OkHttpClient provideOkHttpClient() {
+        return new OkHttpClient.Builder().build();  // 필요 시 추가 설정 가능
     }
 
 }

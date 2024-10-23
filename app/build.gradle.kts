@@ -54,13 +54,20 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
+    //implementation ("org.jetbrains.kotlin:kotlin-scripting-common:1.9.0")
+    //implementation ("org.jetbrains.kotlin:kotlin-scripting-jvm:1.9.0")
+    //implementation ("org.jetbrains.kotlin:kotlin-scripting-jvm-host:1.9.0")
+
+
+    // retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.okhttp3:okhttp:4.9.3")
 
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
 
-    // Add Dependency Injection
+    // 의존성 주입
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-android-compiler:2.48")
 
@@ -73,6 +80,9 @@ dependencies {
     testImplementation ("androidx.arch.core:core-testing:2.1.0")
     testImplementation ("org.mockito:mockito-core:3.12.4")
     testImplementation ("org.mockito:mockito-inline:3.12.4")
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+
     testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
 
 }

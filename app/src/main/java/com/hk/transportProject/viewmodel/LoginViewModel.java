@@ -16,13 +16,24 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class LoginViewModel extends ViewModel {
 
     private final AuthRepository authRepository;
+    private final MutableLiveData<LoginResponse> loginResponse = new MutableLiveData<>();
 
     @Inject
     public LoginViewModel(AuthRepository authRepository) {
         this.authRepository = authRepository;
     }
 
-    public LiveData<LoginResponse> login(String id, String password) {
-        return authRepository.login(id, password);
+    public LiveData<LoginResponse> getLoginResponse(){
+        return loginResponse;
+    }
+
+    //public LiveData<LoginResponse> login(String id, String password) {
+    //    return authRepository.login(id, password);
+    //}
+
+    public void login(String username, String password){
+        authRepository.login(new User(username, password)).observeForever(response ->{
+            loginResponse.setValue(response);
+        });
     }
 }

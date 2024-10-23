@@ -27,6 +27,26 @@ public class AuthRepository {
         this.authService = authService;
     }
 
+    public LiveData<LoginResponse> login(User user) {
+        MutableLiveData<LoginResponse> loginResponse = new MutableLiveData<>();
+        authService.login(user).enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.isSuccessful()) {
+                    loginResponse.setValue(response.body());
+                } else {
+                    loginResponse.setValue(new LoginResponse(false, "Login failed"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                loginResponse.setValue(new LoginResponse(false, "Network error"));
+            }
+        });
+        return loginResponse;
+    }
+    /**
     // 로그인 요청
     public LiveData<LoginResponse> login(String id, String password) {
 
@@ -51,7 +71,7 @@ public class AuthRepository {
 
         return loginResponseLiveData;
     }
-
+     **/
     // 회원가입 요청
     public LiveData<Boolean> signUp(String id, String password, String email) {
         MutableLiveData<Boolean> resultLiveData = new MutableLiveData<>();

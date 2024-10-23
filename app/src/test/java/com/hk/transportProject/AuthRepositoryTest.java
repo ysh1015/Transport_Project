@@ -1,124 +1,89 @@
 package com.hk.transportProject;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.lifecycle.Observer;
+
 import com.hk.transportProject.model.LoginResponse;
-import com.hk.transportProject.model.User;
 import com.hk.transportProject.network.AuthService;
 import com.hk.transportProject.repository.AuthRepository;
 
-import org.junit.Rule;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Mockito;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.LiveData;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-/*
 public class AuthRepositoryTest {
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
-    @Mock
+    private MockWebServer mockWebServer;
     private AuthService authService;
     private AuthRepository authRepository;
 
     @Before
-    public void setUp(){
-        MockitoAnnotations.initMocks(this);
-        // ViewModel에 Mock Repository 주입
-        authRepository = new AuthRepository(authService);
+    public void setUp() throws Exception {
+        mockWebServer = new MockWebServer();
+        mockWebServer.start();
+
+        // OkHttpClient 생성 (필요할 경우 추가 설정 가능)
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+
+        // Retrofit 생성
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mockWebServer.url("/"))  // MockWebServer URL 사용
+                .client(okHttpClient)  // OkHttp 클라이언트 연결
+                .addConverterFactory(GsonConverterFactory.create())  // Gson 변환기 추가
+                .build();
+
+        authService = retrofit.create(AuthService.class);  // Retrofit 인터페이스 구현
+        authRepository = new AuthRepository(authService);  // Repository 생성
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        mockWebServer.shutdown();  // MockWebServer 종료
     }
 
     @Test
-    public void testLoginSuccess(){
-        // Given
-        User user = new User("testUser", "testPassword");
-        LoginResponse mockResponse = new LoginResponse(true, "로그인 성공");
+    public void testLoginSuccess() throws Exception {
+        // Mock된 서버 응답 (로그인 성공)
+        MockResponse mockResponse = new MockResponse()
+                .setBody("{\"success\":true,\"message\":\"로그인 성공\"}")
+                .setResponseCode(200);
+        mockWebServer.enqueue(mockResponse);
 
-        Call<LoginResponse> mockCall = mock(Call.class);
-        // when(authService.login(any(User.class))).thenReturn(mockCall);
+        // Observer 등록
+        Observer<LoginResponse> observer = mock(Observer.class);
+        authRepository.login("testId", "testPassword").observeForever(observer);
 
-        when(authService.login(any(User.class))).thenAnswer(invocation -> {
-            // 확인용 println
-            User userArgument = invocation.getArgument(0);
-            System.out.println("AuthRepositoryTestSuccess - ID: " + userArgument.getUserId());
-            System.out.println("AuthRepositoryTestSuccess - Password: " + userArgument.getPassword());
-
-            doAnswer(invocation1 -> {
-                Callback<LoginResponse> callback = invocation1.getArgument(0);
-                callback.onResponse(mockCall, Response.success(mockResponse));
-                return null;
-            }).when(mockCall).enqueue(any(Callback.class));
-
-            return mockCall;
-            });
-
-        // Retrofit Call 객체 enqueue 직접 제어
-
-        //doAnswer(invocation -> {
-        //    Callback<LoginResponse> callback = invocation.getArgument(0);
-        //    callback.onResponse(mockCall, Response.success(mockResponse));
-        //    return null;
-        //}).when(mockCall).enqueue(any(Callback.class));
-
-
-        // when
-        Call<LoginResponse> responseLiveData = authRepository.login(user);
-
-        // Then
-        assertEquals(true, responseLiveData.getValue().isSuccess());
-        assertEquals("로그인 성공", responseLiveData.getValue().getMessage());
-
+        // Observer에 대한 검증
+        verify(observer).onChanged(new LoginResponse(true, "로그인 성공"));
     }
 
-    public void testLoginFailure(){
-        // Given
-        User user = new User("wrongUser", "wrongPassword");
-        LoginResponse mockResponse = new LoginResponse(false, "로그인 실패");
+    @Test
+    public void testLoginFailure() throws Exception {
+        // Mock된 서버 응답 (로그인 실패)
+        MockResponse mockResponse = new MockResponse()
+                .setBody("{\"success\":false,\"message\":\"로그인 실패\"}")
+                .setResponseCode(401);
+        mockWebServer.enqueue(mockResponse);
 
-        Call<LoginResponse> mockCall = mock(Call.class);
-        when(authService.login(any(User.class))).thenAnswer(invocation -> {
-            // 확인용 println
-            User userArgument = invocation.getArgument(0);
-            System.out.println("AuthRepositoryTestSuccess - ID: " + userArgument.getUserId());
-            System.out.println("AuthRepositoryTestSuccess - Password: " + userArgument.getPassword());
+        // Observer 등록
+        Observer<LoginResponse> observer = mock(Observer.class);
+        authRepository.login("testId", "wrongPassword").observeForever(observer);
 
-            doAnswer(invocation1 -> {
-                Callback<LoginResponse> callback = invocation1.getArgument(0);
-                callback.onResponse(mockCall, Response.success(mockResponse));
-                return null;
-            }).when(mockCall).enqueue(any(Callback.class));
-
-            return mockCall;
-        });
-
-
-        //doAnswer(invocation -> {
-        //    Callback<LoginResponse> callback = invocation.getArgument(0);
-        //    callback.onResponse(mockCall, Response.success(mockResponse));
-        //    return null;
-        //}).when(mockCall).enqueue(any(Callback.class));
-
-        // When
-        LiveData<LoginResponse> responseLiveData = authRepository.login(user);
-
-        // Then
-        assertNotNull(responseLiveData);
-        assertNotNull(responseLiveData.getValue());
-        assertEquals(false, responseLiveData.getValue().isSuccess());
-        assertEquals("로그인 실패", responseLiveData.getValue().getMessage());
+        // Observer에 대한 검증
+        verify(observer).onChanged(new LoginResponse(false, "로그인 실패"));
     }
-
 }
-*/
