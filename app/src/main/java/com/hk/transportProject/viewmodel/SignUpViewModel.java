@@ -4,22 +4,23 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.hk.transportProject.model.User;
-import com.hk.transportProject.model.LoginResponse;
 import com.hk.transportProject.repository.AuthRepository;
 
 import javax.inject.Inject;
 
-public class AuthViewModel extends ViewModel {
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
+public class SignUpViewModel extends ViewModel {
 
     private final AuthRepository authRepository;
 
     @Inject
-    public AuthViewModel(AuthRepository authRepository) {
+    public SignUpViewModel(AuthRepository authRepository) {
         this.authRepository = authRepository;
     }
 
-    public LiveData<LoginResponse> login(String userId, String password) {
-        User user = new User(userId, password);
-        return authRepository.login(user);
+    public LiveData<Boolean> signUp(String id, String password, String email) {
+        return authRepository.signUp(id, password, email);
     }
 }

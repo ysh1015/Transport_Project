@@ -20,39 +20,54 @@ import retrofit2.Response;
 public class AuthRepository {
 
     private final AuthService authService;
+
     // 생성자 DI
     @Inject
     public AuthRepository(AuthService authService) {
-        // authService = RetrofitClient.getRetrofitInstance().create(AuthService.class);
         this.authService = authService;
     }
 
-    // 로그인 요청 User 객체 -> 서버
-    public LiveData<LoginResponse> login(User user) {
-        MutableLiveData<LoginResponse> loginResponse = new MutableLiveData<>();
+    // 로그인 요청
+    public LiveData<LoginResponse> login(String id, String password) {
 
-        // Retrofit으로 로그인 요청
+        MutableLiveData<LoginResponse> loginResponseLiveData = new MutableLiveData<>();
+        User user = new User(id, password, null);
+
         authService.login(user).enqueue(new Callback<LoginResponse>() {
-            // 요청 성공, 실패 처리
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    loginResponse.setValue(response.body());
+                    loginResponseLiveData.setValue(response.body());
                 } else {
-                    loginResponse.setValue(new LoginResponse(false,"로그인 실패" + response.message()));
+                    loginResponseLiveData.setValue(new LoginResponse(false, "로그인 실패"));
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                if(t instanceof IOException) {
-                    loginResponse.setValue(new LoginResponse(false, "네트워크 문제가 발생하였습니다."));
-                } else{
-                    loginResponse.setValue(new LoginResponse(false, "서버 오류: "+ t.getMessage()));
-                }
+                loginResponseLiveData.setValue(new LoginResponse(false, "네트워크 오류"));
             }
         });
 
-        return loginResponse;
+        return loginResponseLiveData;
+    }
+
+    // 회원가입 요청
+    public LiveData<Boolean> signUp(String id, String password, String email) {
+        MutableLiveData<Boolean> resultLiveData = new MutableLiveData<>();
+        User user = new User(id, password, email);
+
+        authService.signUp(user).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                resultLiveData.setValue(response.isSuccessful());
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                resultLiveData.setValue(false);
+            }
+        });
+        return resultLiveData;
     }
 }

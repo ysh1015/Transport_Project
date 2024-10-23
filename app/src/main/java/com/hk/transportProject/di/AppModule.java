@@ -10,21 +10,23 @@ import dagger.Module;
 import dagger.hilt.InstallIn;
 import dagger.Provides;
 import dagger.hilt.components.SingletonComponent;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 @InstallIn(SingletonComponent.class)
 public class AppModule {
 
-    @Provides
     @Singleton
-    public AuthService provideAuthService(){
-        return RetrofitClient.getRetrofitInstance().create(AuthService.class);
+    @Provides
+    public Retrofit provideRetrofit() {
+        return RetrofitClient.getRetrofitInstance();
     }
 
-    @Provides
     @Singleton
-    public AuthRepository provideAuthRepository(AuthService authService){
-        return new AuthRepository(authService);
+    @Provides
+    public AuthService provideApiService(Retrofit retrofit) {
+        return retrofit.create(AuthService.class);
     }
 
 }
