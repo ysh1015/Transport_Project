@@ -4,7 +4,6 @@ import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 // 교통 정보 API 설정
 public class TrafficRetrofitClient {

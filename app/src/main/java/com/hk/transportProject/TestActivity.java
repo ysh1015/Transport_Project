@@ -10,14 +10,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.gson.JsonObject;
 import com.hk.transportProject.AppService.EventApiService;
 import com.hk.transportProject.AppService.TrafficApiService;
-import com.hk.transportProject.AppService.WeatherApiService;
-import com.hk.transportProject.Data.Traffic.TrafficResponse;
 import com.hk.transportProject.Retrofit_Intanse.EventRetrofitClient;
 import com.hk.transportProject.Retrofit_Intanse.TrafficRetrofitClient;
-import com.hk.transportProject.Retrofit_Intanse.WeatherRetrofitClient;
 
 import java.io.IOException;
 
@@ -60,41 +56,6 @@ public class TestActivity extends AppCompatActivity {
 
          */
 
-        Call<TrafficResponse> call = trafficApiService.getTrafficInfo(
-                "g3s%2FsU96JysexYpblDXIc4%2BV33peeadeoSi2BpBF5ej8XHRQtmPphiSA4dkF3s7b0CF5gDDO6%2FN2%2FweFSIDgCA%3D%3D",
-                127.0284667F,
-                37.49545F
-        );
-
-        call.enqueue(new Callback<TrafficResponse>() {
-            @Override
-            public void onResponse(Call<TrafficResponse> call, Response<TrafficResponse> response) {
-                if(response.isSuccessful() && response.body() != null)
-                {
-                    // 성공적인 응답
-                    TrafficResponse trafficData = response.body();
-                    Log.d("TrafficAPI", "응답 성공: " + trafficData.toString());
-
-                    TextView textView = findViewById(R.id.textView);
-                    textView.setText(trafficData.toString());
-                }
-                else
-                {
-                    Log.e("TrafficAPI", "응답 실패, 상태 코드: " + response.code());
-                    try {
-                        Log.e("TrafficAPI", "에러 응답 본문: " + response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<TrafficResponse> call, Throwable t) {
-                // API 호출 실패
-                Log.e("TrafficAPI", "API 호출 실패: " + t.getMessage());
-            }
-        });
 
 /*
         // 비동기 API 요청

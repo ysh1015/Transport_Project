@@ -30,6 +30,8 @@ tikxml-processor = {group = "com.tickaroo.tikxml", name = "processor", version =
 
 # 네이버 지도 API
 naver-map-sdk = { group = "com.naver.maps", name = "map-sdk", version = "3.19.1" }
+# 네이버 지도 위치 기반 서비스
+naver-map-service = {group = "com.google.android.gms", name = "play-services-location", version = "21.3.0"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
