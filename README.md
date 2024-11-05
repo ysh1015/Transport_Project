@@ -49,7 +49,7 @@
   ### Retrofit 관련 오류
     1. BASE_URL 와 엔드포인트 경계
     2. DTO 파일의 생성 : Gson의 jsonObject로 해결함
-    __주의 : 안드로이드의 JSONObject와 Gson의 jsonObject는 서로 다른 것임__
+  __주의 : 안드로이드의 JSONObject와 Gson의 jsonObject는 서로 다른 것임__
 
 #### XML 연결 관련 오류
     1. SimpleXML 버전 오류 : 옛날 버전에서나 쓰이던거라 현재 코알라 버전에서는 사용 불가
